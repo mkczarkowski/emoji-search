@@ -3,18 +3,27 @@ import Header from "./Header";
 import SearchInput from "./SearchInput";
 import EmojiResults from "./EmojiResults";
 import filterEmoji from "./filterEmoji";
+import doAsyncCall from "./doAsyncCall";
 
 class App extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      filteredEmoji: filterEmoji("", 20)
+      filteredEmoji: [],
+      status: null,
+      maxResults: 20
     };
+  }
+
+  componentDidMount() {
+    doAsyncCall().then(() => {
+      this.setState({ filteredEmoji: filterEmoji("", this.state.maxResults) });
+    });
   }
 
   handleSearchChange = event => {
     this.setState({
-      filteredEmoji: filterEmoji(event.target.value, 20)
+      filteredEmoji: filterEmoji(event.target.value, this.state.maxResults)
     });
   };
 
